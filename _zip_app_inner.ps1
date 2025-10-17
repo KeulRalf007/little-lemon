@@ -43,7 +43,7 @@ foreach ($folder in $folders) {
 }
 
 # Files to include from the root directory
-$fileExtensions = @("*.json", "*.md")
+$fileExtensions = @("*")
 $extraFiles = @()
 
 foreach ($pattern in $fileExtensions) {
@@ -51,11 +51,7 @@ foreach ($pattern in $fileExtensions) {
     $extraFiles += $found.FullName
 }
 
-# Add .gitignore if present
-$gitignore = Join-Path $root ".gitignore"
-if (Test-Path $gitignore) {
-    $extraFiles += $gitignore
-}
+
 
 # If nothing to zip, stop
 if ($existingFolders.Count -eq 0 -and $extraFiles.Count -eq 0) {

@@ -1,3 +1,4 @@
+// app/index.tsx
 import { Colors } from "@/constants/theme";
 import { useProfile } from "@/context/ProfileContext";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -22,14 +23,14 @@ export default function Index() {
   const [state, setState] = useState({
     isLoading: true,
     isOnboardingCompleted: false,
-  });   
+  });
 
 
   // This effect only runs when at initial mount 
-   useEffect(() => {
+  useEffect(() => {
     if (loading) return;
     if (profile) {
-      router.replace("/profile"); // e.g., go to main app after login
+      router.replace("/home"); // e.g., go to main app after login
     } else {
       router.replace("/onboarding");
     }
@@ -40,11 +41,11 @@ export default function Index() {
 
 
   // Show SplashScreen while loading
-    return (
-    <View style={[globalStyles.container,{ backgroundColor: colorTheme.background }]}>
+  return (
+    <View style={[globalStyles.container, { backgroundColor: colorTheme.background }]}>
       <ActivityIndicator size="large" />
     </View>
   );
 
-  };
-    
+};
+

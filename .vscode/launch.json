@@ -1,58 +1,84 @@
-		{
-		  "version": "0.2.0",
-		  "configurations": [
-		    {
-		      "name": "Launch Edge (Expo Web)",
-		      "type": "pwa-msedge",
-		      "request": "launch",
-		      "url": "http://localhost:8081",     // update if your expo web URL differs
-		      "webRoot": "${workspaceFolder}",
-		      "runtimeExecutable":  "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"        // or full path to msedge.exe / Mac path
-		    },
-		    {
-		      "name": "Attach to Edge (remote debugging)",
-		      "type": "pwa-msedge",
-		      "request": "attach",
-		      "port": 9222,
-		      "webRoot": "${workspaceFolder}"
-		    },
-		    {
-		      "name": "Debug Expo (React Native)",
-		      "type": "reactnative",
-		      "request": "launch",
-		      "platform": "exponent"
-		    },
-
-			
-			{
-			"name": "Debug ts-node (CommonJS + Pretty Errors)",
-			"type": "node",
-			"request": "launch",
-			"program": "${workspaceFolder}/node_modules/ts-node/dist/bin.js",
-			"args": [
-				"-P",
-				"${workspaceFolder}/tsconfig.node.json",
-				"${file}"
-			],
-			"cwd": "${workspaceFolder}",
-			"console": "integratedTerminal",
-			"internalConsoleOptions": "neverOpen",
-			"sourceMaps": true,
-			"skipFiles": ["<node_internals>/**"],
-			"env": {
-				"TS_NODE_TRANSPILE_ONLY": "false",
-				"TS_NODE_FILES": "true",
-				"TS_NODE_COMPILER_OPTIONS": "{\"pretty\":true}",
-				"FORCE_COLOR": "1"
-			},
-			"outputCapture": "std"
-			}
-		],
-			"compounds": [
-		{
-			"name": "Debug Expo + ts-node (Parallel)",
-			"configurations": ["Debug Expo (React Native)", "Debug ts-node Script"],
-			"stopAll": false
-		}
-		  ]
-}
+    {
+      "version": "0.2.0",
+      "configurations": [
+        {
+          "name": "0.Launch Expo Web (Edge, Chrome). PreCodition: npx expo start --web",
+          "type": "pwa-chrome",
+          "request": "launch",
+          "url": "http://localhost:8081",
+          "webRoot": "${workspaceFolder}",
+          "runtimeExecutable": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+          "runtimeArgs": [
+            "--remote-debugging-port=9222",
+            "--no-first-run",
+            "--disable-infobars"
+          ],
+          "skipFiles": [
+            "<node_internals>/**",
+            "node_modules/**",
+            "**/utils/logger.ts",
+          ]
+        },
+        {
+          "name": "1.Launch Edge (Expo Web)",
+          "type": "pwa-msedge",
+          "request": "launch",
+          "url": "http://localhost:8081", // update if your expo web URL differs
+          "webRoot": "${workspaceFolder}",
+          "runtimeExecutable": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", // or full path to msedge.exe / Mac path
+          "skipFiles": [
+            "<node_internals>/**",
+            "node_modules/**",
+            "**/utils/logger.ts",
+          ]
+        },
+        {
+          "name": "2.Attach to Edge (remote debugging)",
+          "type": "pwa-msedge",
+          "request": "attach",
+          "port": 9222,
+          "webRoot": "${workspaceFolder}"
+        },
+        {
+          "name": "Debug Expo (React Native)",
+          "type": "reactnative",
+          "request": "launch",
+          "platform": "exponent"
+        },
+        {
+          "name": "Debug ts-node (CommonJS + Pretty Errors)",
+          "type": "node",
+          "request": "launch",
+          "program": "${workspaceFolder}/node_modules/ts-node/dist/bin.js",
+          "args": [
+            "-P",
+            "${workspaceFolder}/tsconfig.node.json",
+            "${file}"
+          ],
+          "cwd": "${workspaceFolder}",
+          "console": "integratedTerminal",
+          "internalConsoleOptions": "neverOpen",
+          "sourceMaps": true,
+          "skipFiles": [
+            "<node_internals>/**"
+          ],
+          "env": {
+            "TS_NODE_TRANSPILE_ONLY": "false",
+            "TS_NODE_FILES": "true",
+            "TS_NODE_COMPILER_OPTIONS": "{\"pretty\":true}",
+            "FORCE_COLOR": "1"
+          },
+          "outputCapture": "std"
+        }
+      ],
+      "compounds": [
+        {
+          "name": "Debug Expo + ts-node (Parallel)",
+          "configurations": [
+            "Debug Expo (React Native)",
+            "Debug ts-node Script"
+          ],
+          "stopAll": false
+        }
+      ]
+    }
