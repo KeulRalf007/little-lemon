@@ -5,13 +5,18 @@
     "module": "ESNext",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "utils/testMaster.ts",
+    "utils/logger.mts",
+    "utils/webService.ts"
   ]
 }

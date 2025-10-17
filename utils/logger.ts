@@ -1,27 +1,51 @@
-	// utils/logger.ts
-	// Only use .tsx for files containing JSX/React components.
-	// Use .ts for plain TypeScript utilities, like logger, database, or helpers.
-	// In order to test JS/TS logic outside Expo, not Expo APIs, you can make your logger work in Node outside expo by conditionally importing:
-let log: any;
+// utils/logger.ts
+/**
+ * Universal logger usable in both Expo (React Native) and Node.
+ * Usage: import { log } from './logger'; then call log('message', data);
+ */
+
+let log: (...args: any[]) => void;
 
 try {
-  // Works inside Expo / React Native
-  const { default: logger } = require('react-native-logs');
-  log = logger.createLogger({
-    severity: 'debug',
-    transportOptions: {
-      colors: {
-        info: 'blue',
-        warn: 'yellow',
-        error: 'red',
-        debug: 'gray',
+  // React Native / Expo (window is defined)
+  if (typeof window !== "undefined" && typeof navigator !== "undefined" && navigator.product === "ReactNative") {
+    // Lazy require to avoid breaking Node
+    const { default: RNLogs } = require("react-native-logs");
+
+    const rnLogger = RNLogs.createLogger({
+      severity: "debug",
+      transportOptions: {
+        colors: {
+          info: "blue",
+          warn: "yellow",
+          error: "red",
+          debug: "gray",
+        },
       },
-    },
-  });
-} catch (e) {
-  // Fallback for Node environment
-  log = console.log;
+    });
+
+    log = (...args: any[]) => {
+      try {
+        rnLogger.debug(...args);
+      } catch (err) {
+        console.log("[RNLogger Fallback]", ...args);
+      }
+    };
+  } else {
+    // Node or browser (no React Native)
+    log = (...args: any[]) => {
+      try {
+        const timestamp = new Date().toISOString();
+        console.log(`[${timestamp}]`, ...args);
+      } catch (err) {
+        // Fallback if console fails for some reason
+        process.stderr.write(`Logger error: ${(err as Error).message}\n`);
+      }
+    };
+  }
+} catch (err) {
+  // If anything fails (bad require, import issues, etc.)
+  log = (...args: any[]) => console.log("[SafeLogger Fallback]", ...args);
 }
 
 export { log };
-

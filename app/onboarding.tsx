@@ -1,3 +1,4 @@
+// app/onboarding.tsx
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { globalStyles } from '@/styles/globalStyles';
@@ -10,73 +11,76 @@ import { validateEmail, validateNonEmptyString } from '../utils/validateEmail';
 export default function Onboarding() {
 
 	const colorScheme = useColorScheme();
-  	const colorTheme = Colors[colorScheme];
+	const colorTheme = Colors[colorScheme];
 
-    const { setProfile } = useProfile(); 
+	const { setProfile } = useProfile();
 	const [firstName, setFirstName] = React.useState('');
-    const [email, setEmail] = React.useState('');
-
-    return (
+	const [email, setEmail] = React.useState('');
 
 
-			<KeyboardAvoidingView
-				style={globalStyles.onboardingContainer}
-				behavior={Platform.OS === "ios" ? "padding" : undefined}
-				>
-				{/* Logo at the top */}
-				<Image
-					source={require("../images/Logo.png")}
-					style={globalStyles.onboardingLogo}
-				/>
+	const hasLeftIcon = false; // Set to true to show left icon in header
 
-				{/* Centered content */}
-				<View style={globalStyles.onboardingContent}>
-					<Text style={globalStyles.onboardingHeaderText}>Let us get to know you</Text>
+	return (
 
-					<TextInput
+
+		<KeyboardAvoidingView
+			style={globalStyles.onboardingContainer}
+			behavior={Platform.OS === "ios" ? "padding" : undefined}
+		>
+			{/* Logo at the top */}
+			<Image
+				source={require("../images/Logo.png")}
+				style={globalStyles.headerLogo}
+			/>
+
+			{/* Centered content */}
+			<View style={globalStyles.onboardingContent}>
+				<Text style={globalStyles.onboardingHeaderText}>Let us get to know you</Text>
+
+				<TextInput
 					style={globalStyles.onboardingInput}
 					value={firstName}
 					onChangeText={setFirstName}
 					placeholder="First Name"
-					/>
-					<Text style={globalStyles.inputCorrection}>
+				/>
+				<Text style={globalStyles.inputCorrection}>
 					{firstName && !validateNonEmptyString(firstName)
 						? "Use alphabetical letters, not numbers or special characters"
 						: ""}
-					</Text>
+				</Text>
 
-					<TextInput
+				<TextInput
 					style={globalStyles.onboardingInput}
 					value={email}
 					onChangeText={setEmail}
 					placeholder="Email"
 					keyboardType="email-address"
-					/>
-					<Text style={globalStyles.inputCorrection}>
+				/>
+				<Text style={globalStyles.inputCorrection}>
 					{email && !validateEmail(email) ? "Use valid Email Addresses" : ""}
-					</Text>
+				</Text>
 
-					<Pressable
+				<Pressable
 					style={[
 						globalStyles.onboardingButton,
 						{
-						backgroundColor:
-							validateNonEmptyString(firstName) && validateEmail(email)
-							? "#495E57"
-							: "#B7B7B7",
+							backgroundColor:
+								validateNonEmptyString(firstName) && validateEmail(email)
+									? "#495E57"
+									: "#B7B7B7",
 						},
 					]}
 					disabled={!(validateNonEmptyString(firstName) && validateEmail(email))}
 					onPress={() => {
 						setProfile({ firstName, email });
-						router.replace("/profile");
+						router.replace("/home");
 					}}
-					>
+				>
 					<Text style={globalStyles.onboardingButtonText}>Next</Text>
-					</Pressable>
-				</View>
-				</KeyboardAvoidingView>
+				</Pressable>
+			</View>
+		</KeyboardAvoidingView>
 
-    );
+	);
 };
 
