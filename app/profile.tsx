@@ -282,7 +282,7 @@ export default function Profile() {
         }}
       />
       <Text style={globalStyles.inputCorrection}>
-        {!(editableProfile.phoneNumber?.trim() === "" || editableProfile.phoneNumber.replace(/\D/g, "").length === 10) ? "Use valid 10 digit phone number" : ""}
+        {!(editableProfile.phoneNumber?.trim() === "" || editableProfile.phoneNumber?.replace(/\D/g, "").length === 10) ? "Use valid 10 digit phone number" : ""}
       </Text>
 
       {/* Notifications */}
@@ -326,13 +326,13 @@ export default function Profile() {
             validateNonEmptyString(editableProfile.firstName) && validateEmail(editableProfile.email) &&
               (
                 editableProfile.phoneNumber?.trim() === "" ||
-                editableProfile.phoneNumber.replace(/\D/g, "").length === 10
+                editableProfile.phoneNumber?.replace(/\D/g, "").length === 10
               )
               ? "#495E57"
               : "#B7B7B7",
         }]}
           onPress={saveChanges}
-          disabled={!(validateNonEmptyString(editableProfile.firstName) && validateEmail(editableProfile.email) && (editableProfile.phoneNumber?.trim() === "" || editableProfile.phoneNumber.replace(/\D/g, "").length === 10))}>
+          disabled={!(validateNonEmptyString(editableProfile.firstName) && validateEmail(editableProfile.email) && (editableProfile.phoneNumber?.trim() === "" || editableProfile.phoneNumber?.replace(/\D/g, "").length === 10))}>
           <Text style={globalStyles.saveText}>Save changes</Text>
         </Pressable>
       </View>
