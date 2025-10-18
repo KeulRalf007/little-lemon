@@ -142,10 +142,11 @@ export async function dbFilterByQueryAndCategories(
 
     if (searchPattern?.trim()) {
         whereClauses.push("name LIKE ?");
-        params.push(`%${searchPattern}%`);
+        params.push(`%${searchPattern.trim()}%`);
     }
 
     if (activeCategories?.length > 0) {
+        activeCategories = activeCategories.map((cat) => cat.toLowerCase())
         const placeholders = activeCategories.map(() => "?").join(", ");
         whereClauses.push(`category IN (${placeholders})`);
         params.push(...activeCategories);
@@ -177,11 +178,18 @@ export async function dbFilterByQueryAndCategories(
     } else {
         log(`database.tsx:dbFilterByQueryAndCategories:2ai.Android or iOS Platform`);
         if (!sqliteDb) await initSQLite();
+        log(`database.tsx:dbFilterByQueryAndCategories:3ai.`);
         const db = sqliteDb as SQLite.SQLiteDatabase;
+        log(`database.tsx:dbFilterByQueryAndCategories:4ai.`);
+        log(`database.tsx:dbFilterByQueryAndCategories:4ai. activeCategories: `, activeCategories);
+        log(`database.tsx:dbFilterByQueryAndCategories:4ai. whereClauses: `, whereClauses);
         const whereSQL = whereClauses.length > 0 ? `WHERE ${whereClauses.join(" AND ")}` : "";
-        const sql = `SELECT * FROM menuitems ${whereSQL}`;
+        log(`database.tsx:dbFilterByQueryAndCategories:5ai. whereSQL: `, whereSQL);
+        const sql = `SELECT * FROM menuitems ${whereSQL}; `;
+        log(`database.tsx:dbFilterByQueryAndCategories:6ai.sql: ${sql}`);
+        log(`database.tsx:dbFilterByQueryAndCategories:6ai.params: ${params}`);
         const result = await db.getAllAsync<MenuItem>(sql, ...params);
-        log(`database.tsx:native:dbFilterByQueryAndCategories - Filtered ${result.length} items`);
+        log(`database.tsx:dbFilterByQueryAndCategories:7ai.End result.lenght: ${result.length}`);
         return result;
     }
 }

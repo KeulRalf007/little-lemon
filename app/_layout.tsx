@@ -5,15 +5,19 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { Karla_400Regular, Karla_600SemiBold } from "@expo-google-fonts/karla";
 import { MarkaziText_700Bold, useFonts } from "@expo-google-fonts/markazi-text";
 import { ThemeProvider } from "@react-navigation/native";
-import AppLoading from "expo-app-loading";
 import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useEffect } from "react";
+import { View } from "react-native";
 import "react-native-reanimated";
 
 export const unstable_settings = {
   anchor: "(tabs)",
 };
+
+// Prevent splash screen from auto hiding before fonts load
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   // ✅ All hooks must be declared unconditionally
@@ -25,9 +29,14 @@ export default function RootLayout() {
 
   const colorScheme = useColorScheme(); // ✅ Always called before any return
 
-  // ✅ Now it's safe to conditionally render UI
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return <View />; // blank screen until fonts are loaded
   }
 
   const navigationTheme = {
@@ -40,12 +49,27 @@ export default function RootLayout() {
       border: Colors[colorScheme].icon,
       notification: Colors[colorScheme].tabIconSelected,
     },
+    fonts: {
+      regular: { fontFamily: "Karla_400Regular", fontWeight: "400" },
+      medium: { fontFamily: "Karla_600SemiBold", fontWeight: "600" },
+      bold: { fontFamily: "MarkaziText_700Bold", fontWeight: "700" },
+    },
   };
 
   return (
     <ProfileProvider>
       <ThemeProvider value={navigationTheme}>
-        <Stack>
+        <Stack screenOptions={{
+          headerShown: false,
+          headerTitleStyle: {
+            fontFamily: "Karla_600SemiBold",
+            fontSize: 18,
+          },
+          headerBackTitleStyle: {
+            fontFamily: "Karla_400Regular",
+          },
+          headerTitleAlign: "center",
+        }}>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="splashscreen" options={{ headerShown: false }} />
           <Stack.Screen name="home" options={{ headerShown: false }} />

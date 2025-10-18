@@ -27,7 +27,8 @@ $folders = @(
     'img',
     'styles',
     'navigators',
-    'utils'
+    'utils',
+	'FigmaWireframe'
 )
 
 $existingFolders = @()

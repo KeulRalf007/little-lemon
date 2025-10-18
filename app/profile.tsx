@@ -33,12 +33,12 @@ export default function Profile() {
 
   // 🟡 Keep local copy of saved global profile in sync
   React.useEffect(() => {
-    setSavedProfile(profile);
+    if (profile && profile !== editableProfile) {
+      setSavedProfile(profile);
+      setEditableProfile(profile);
+    }
   }, [profile]);
 
-  React.useEffect(() => {
-    if (profile) setEditableProfile(profile);
-  }, [profile]);
 
   const animateAvatar = () => {
     // fade out quickly, then back in
@@ -96,7 +96,7 @@ export default function Profile() {
 
   const saveChanges = async () => {
     const digits = (editableProfile.phoneNumber || "").replace(/\D/g, "");
-    if (digits.length !== 10) {
+    if ((digits.trim().length !== 0) && digits.length !== 10) {
       alert("Please enter a valid 10-digit U.S. phone number.");
       return;
     }
@@ -219,7 +219,7 @@ export default function Profile() {
 
 
       {/* Form Fields */}
-      <Text style={globalStyles.label}>First name</Text>
+      <Text style={globalStyles.label}>First name *</Text>
       <TextInput
         style={globalStyles.input}
         value={editableProfile.firstName || ""}
@@ -247,7 +247,7 @@ export default function Profile() {
         }
       />
 
-      <Text style={globalStyles.label}>Email</Text>
+      <Text style={globalStyles.label}>Email *</Text>
       <TextInput
         style={globalStyles.input}
         value={editableProfile.email || ""}
@@ -270,13 +270,20 @@ export default function Profile() {
         placeholderTextColor="#888"
         value={editableProfile.phoneNumber || ""}
         onChangeText={(formatted, extracted) => {
-          // `formatted` is the masked value e.g. "(555) 123-4567"
-          // `extracted` is the raw numbers e.g. "5551234567"
-          if (extracted?.length <= 10) {
-            setEditableProfile({ ...editableProfile, phoneNumber: formatted });
+          const newValue = !extracted
+            ? ""
+            : extracted.length <= 10
+              ? formatted
+              : editableProfile.phoneNumber;
+
+          if (editableProfile.phoneNumber !== newValue) {
+            setEditableProfile({ ...editableProfile, phoneNumber: newValue });
           }
         }}
       />
+      <Text style={globalStyles.inputCorrection}>
+        {!(editableProfile.phoneNumber?.trim() === "" || editableProfile.phoneNumber.replace(/\D/g, "").length === 10) ? "Use valid 10 digit phone number" : ""}
+      </Text>
 
       {/* Notifications */}
       <Text style={globalStyles.title}>Email notifications</Text>
@@ -316,12 +323,16 @@ export default function Profile() {
 
         <Pressable style={[globalStyles.saveButton, {
           backgroundColor:
-            validateNonEmptyString(editableProfile.firstName) && validateEmail(editableProfile.email)
+            validateNonEmptyString(editableProfile.firstName) && validateEmail(editableProfile.email) &&
+              (
+                editableProfile.phoneNumber?.trim() === "" ||
+                editableProfile.phoneNumber.replace(/\D/g, "").length === 10
+              )
               ? "#495E57"
               : "#B7B7B7",
         }]}
           onPress={saveChanges}
-          disabled={!(validateNonEmptyString(editableProfile.firstName) && validateEmail(editableProfile.email))}>
+          disabled={!(validateNonEmptyString(editableProfile.firstName) && validateEmail(editableProfile.email) && (editableProfile.phoneNumber?.trim() === "" || editableProfile.phoneNumber.replace(/\D/g, "").length === 10))}>
           <Text style={globalStyles.saveText}>Save changes</Text>
         </Pressable>
       </View>

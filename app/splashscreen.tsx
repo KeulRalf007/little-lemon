@@ -12,7 +12,7 @@ export default function SplashScreen() {
   return (
     <View style={[globalStyles.container, { backgroundColor: colorTheme.background }]}>
       <ActivityIndicator size="large" />
-      <Text style={[globalStyles.text, { color: colorTheme.text }]}>Loading...</Text>
+      <Text style={[globalStyles.onboardingHeaderText, { color: colorTheme.text }]}>Loading...</Text>
     </View>
   );
 }

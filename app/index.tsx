@@ -6,6 +6,7 @@ import { globalStyles } from '@/styles/globalStyles';
 import { useRootNavigationState, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { log } from "../utils/logger";
 //const Stack = createNativeStackNavigator();
 
 export default function Index() {
@@ -28,10 +29,16 @@ export default function Index() {
 
   // This effect only runs when at initial mount 
   useEffect(() => {
+    log("Index.tsx:useEffect:1.Start")
     if (loading) return;
-    if (profile) {
+    log("Index.tsx:useEffect:2.Profile", profile)
+    log("Index.tsx:useEffect:3.Profile.firstName", profile?.firstName)
+    log("Index.tsx:useEffect:4.Profile.email", profile?.email)
+    if (profile?.firstName && profile?.email) {
+      log("Index.tsx:useEffect:5a. GO TO HOME")
       router.replace("/home"); // e.g., go to main app after login
     } else {
+      log("Index.tsx:useEffect:5b. GO TO onboarding")
       router.replace("/onboarding");
     }
   }, [loading, profile]);
