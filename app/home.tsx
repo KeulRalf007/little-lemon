@@ -167,7 +167,6 @@ export default function Home() {
   return (
     <>
       {/* Header -----------------------------------------------------------------------------------------------*/}
-      < Text > Home Page</Text >
       <View style={globalStyles.header}>
         <Pressable onPress={() => console.log("Left icon pressed")} style={globalStyles.headerIconButton}>
           <Image source={require("../images/Back.png")} style={globalStyles.headerLogoLeft} />
